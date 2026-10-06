@@ -1,0 +1,19 @@
+{
+  "name": "AiLab — AI Apps and Agents Developer",
+  "short_name": "AiLab",
+  "description": "A public Microsoft Foundry engineering lab for generative AI applications, agents, multimodal understanding and responsible AI operations.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#0f3c68",
+  "lang": "en",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}

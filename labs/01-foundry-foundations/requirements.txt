@@ -1,0 +1,4 @@
+azure-identity>=1.19.0
+azure-ai-projects>=2.0.0
+python-dotenv>=1.0.1
+pytest>=8.3.0

@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="AiLab">
+  <rect width="64" height="64" rx="14" fill="#0f3c68" />
+  <path d="M20 44 L29 20 h6 l9 24 h-6.4l-1.9-5.4h-8.4L25.4 44z" fill="#ffffff" />
+  <path d="M29.9 33.4h4.2L32 27.2z" fill="#0f3c68" />
+  <circle cx="46" cy="21" r="4" fill="#4fd1c5" />
+</svg>

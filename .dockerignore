@@ -1,0 +1,14 @@
+node_modules
+dist
+coverage
+.git
+.github
+.vscode
+labs
+docs
+*.md
+!README.md
+.env
+.env.*
+.venv
+__pycache__
