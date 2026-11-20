@@ -12,24 +12,40 @@ AiLab is three things at once:
 
 Public site: <https://ailab.dobecom.me> (local: <http://127.0.0.1:2050>)
 
-## The content contract
+## The journey deck
 
-Every published item is added as one set:
+The site is a proposal-style slide deck rather than a long page. Visitors move
+horizontally through 24 slides: a cover, an overview map, four modules that
+each open with a module slide followed by four stages, and two closing slides
+(the AI transformation playbook, then expertise, standards and environment notes).
 
-| Stage | What it means |
+| Module | Scope |
 | --- | --- |
-| Theory | The concept, the service selection criteria and the decisions that matter |
-| Foundry build | The idea implemented in a Microsoft Foundry project |
-| Result | Real model or agent output, traces, token usage, latency and scores |
-| Evidence | Architecture, code, configuration, failures, fixes, security and cost |
+| 1 · Generative AI Apps | Model selection, evaluation, build and optimisation of generative applications |
+| 2 · Agentic Solutions | Agents, tools and knowledge, integration and automation, multi-agent orchestration |
+| 3 · Language & Voice | Text analysis, speech to text, text to speech, Voice Live and translation |
+| 4 · Vision & Documents | Image understanding and generation, Document Intelligence, Content Understanding and knowledge mining |
 
-Items are labelled **Planned**, **Building** or **Published**. A placeholder is
-never shown as a live model result. Tests in `src/content/content.test.ts`
-enforce this and keep private context off the public page.
+Each stage pairs a visual (flow, hub, layers, cycle, matrix, spectrum,
+comparison, bars, steps, stats, tiles or code) with key points, a decision and
+recorded evidence captures. Captures open in a lightbox. Items that depend on
+region, billing tier or a preview feature are stated as **Limitations**.
+
+Navigation: edge buttons, the journey rail, the keyboard (arrows, Home, End)
+and the URL hash (`#m2-s3`) which makes every slide linkable.
+
+## Languages
+
+English is the default. The globe icon in the top bar switches the text to
+Korean without reloading. The choice is stored in `localStorage` and the
+`<html lang>` attribute follows it. Technical terms stay in English in both
+languages. Both versions live statically in the same typed content files, so
+nothing is translated at runtime.
 
 ## Stack
 
-- React 19, TypeScript, Vite, Fluent UI React Components
+- React 19, TypeScript, Vite, Fluent UI React Components and icons
+- Static SVG and CSS visuals; no chart library and no runtime network calls
 - Nginx in a container, behind Caddy and Cloudflare in production
 - Python first for the labs under `labs/`
 - No AiLab backend: live Foundry features will be served by the shared
@@ -38,13 +54,27 @@ enforce this and keep private context off the public page.
 ## Repository layout
 
 ```text
-src/content/    typed content model and its safety tests
-src/components/ page sections
-src/app/        application shell and its tests
-labs/           Python labs, one directory each, with teardown and cost notes
-docs/           architecture, content model, cost and cleanup notes
-nginx.conf      standalone container config (Compose mounts its own copy)
+src/content/journey/        bilingual content (module1-4, site, types) and its tests
+src/components/journey/     deck, slides, rail, lightbox
+src/components/journey/visuals/  data-driven SVG and CSS visual renderers
+src/i18n/                   language provider and UI strings
+src/app/                    shell, CSS (base, slides, visuals) and its tests
+public/img/foundry/         evidence captures (PNG) and thumb/ (WebP)
+public/img/art/             cover and module artwork (WebP)
+labs/                       Python labs, one directory each, with teardown and cost notes
+docs/                       architecture, content model, cost and cleanup notes
+nginx.conf                  standalone container config (Compose mounts its own copy)
 ```
+
+## Evidence images and masking
+
+The captures in `public/img/foundry` are served as static files under `/img/`
+with a seven-day cache. Every capture is checked before publication, and keys,
+endpoints, resource names and tenant identifiers are masked in the pixels.
+Content text uses placeholders such as `<resource-name>`, `<project-name>`,
+`<tenant-id>` and `<API-KEY>`. `content.test.ts` fails if a real host name,
+GUID or key fragment appears in any text. Add a new capture only after masking
+it, then register its size in `imageSizes.json`.
 
 ## Local development
 

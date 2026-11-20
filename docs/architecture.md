@@ -6,7 +6,8 @@
 Browser
   -> Cloudflare -> Caddy (production)
        -> ailab-web container (Nginx, static React build)
-            /           SPA
+            /           SPA (slide deck)
+            /img/*      static captures and artwork, cached 7 days
             /healthz    200 ok
             /api/*      404 — no AiLab backend exists yet
 ```
@@ -34,25 +35,38 @@ Rules that do not change:
 
 ## Frontend
 
-A single static page assembled from typed content:
+A single static page presented as a horizontal slide deck:
 
 ```text
-src/content/*.ts        data and its invariants
-src/components/*.tsx    one component per public section
-src/app/App.tsx         shell: header, main, footer
-src/main.tsx            FluentProvider + React root
+src/content/journey/            bilingual content and its invariants
+src/components/journey/         Journey (deck), TopBar, Rail, slides, Lightbox
+src/components/journey/visuals/ VisualRenderer plus SVG/CSS diagram and data visuals
+src/i18n/                       LangProvider (en/ko, persisted) and UI strings
+src/app/App.tsx                 shell: skip link, top bar, deck, rail
+src/main.tsx                    FluentProvider (dark theme) + LangProvider + React root
 ```
 
-Section order is fixed by `navigation` in `src/content/site.ts` and asserted in
-tests, because the information architecture is a requirement rather than a
-layout preference:
+Slide order is derived from the content: cover, overview, then for each module
+a module slide and four stage slides, then two closing slides: `closing` (the
+AI transformation playbook) and `notes` (expertise, standards, embedded
+playground and environment notes). The active slide is
+mirrored in the URL hash (`#cover`, `#m2`, `#m2-s3`), so every slide is a
+shareable link and the back button works.
 
-1. Professional identity (hero)
-2. Core expertise
-3. Learning modules and labs
-4. Embedded playground
-5. AI transformation playbook
-6. About the lab
+Visuals are data-driven: a stage declares a visual kind and its data, and
+`VisualRenderer` draws it with SVG and CSS. There is no chart library and no
+runtime network call, which keeps the CSP at `default-src 'self'`.
+
+Static assets:
+
+| Path | Content | Cache |
+| --- | --- | --- |
+| `/img/foundry/imgN.png` | Masked evidence captures | 7 days |
+| `/img/foundry/thumb/imgN.webp` | Thumbnails used in the stage layout | 7 days |
+| `/img/art/*.webp` | Cover and module artwork | 7 days |
+
+Language is held in `LangProvider`, persisted in `localStorage` and reflected
+in `<html lang>`. Only text switches; images and layout are shared.
 
 ## Build-time SEO
 
@@ -67,13 +81,16 @@ being indexed.
 
 ## Accessibility
 
-- A skip link precedes the header and targets `#main`.
-- `header`, `nav[aria-label]`, `main`, `section[aria-labelledby]` and `footer`
-  landmarks are used throughout.
-- Headings run `h1` once, then `h2` per section and `h3` per item.
-- Layout uses `rem` units and `auto-fit` grids so 200% zoom and narrow
+- A skip link precedes the top bar and targets the deck.
+- Inactive slides are `inert` and `aria-hidden`, so keyboard and screen reader
+  users only reach the visible slide.
+- Edge buttons, the rail and the arrow, Home and End keys move through the deck.
+- The language button states its action in the current language.
+- Captures open in a Fluent dialog with a caption, previous/next buttons and a
+  close button.
+- Layout uses container queries and `rem` units so 200% zoom and narrow
   viewports reflow instead of clipping.
-- `prefers-reduced-motion` disables smooth scrolling and animation.
+- `prefers-reduced-motion` disables slide transitions and all animation.
 - Focus is always visible through `:focus-visible`.
 
 ## Security headers

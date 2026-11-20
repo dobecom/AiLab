@@ -1,59 +1,59 @@
 # Content model
 
-All public copy lives in `src/content` as typed data, so the page cannot drift
-from the rules the lab is held to.
+All public copy lives in `src/content/journey` as typed, bilingual data. Every
+user-visible string is a localized value `{ en, ko }`, so the English and Korean
+versions are saved statically and cannot drift apart.
 
-## Status
+## Shape
 
-```ts
-type DeliveryStatus = 'planned' | 'building' | 'published'
+```text
+Module  -> id, accent, title, tagline, art image, stages[4]
+Stage   -> id, title, summary, visual, keyPoints[], decision, limitations[], evidence[]
+Visual  -> one of: flow, hub, layers, cycle, matrix, spectrum, compare,
+           bars, steps, stats, tiles, code
 ```
 
-| Status | Meaning |
-| --- | --- |
-| `planned` | Scoped, not started. |
-| `building` | In progress; no verified result published yet. |
-| `published` | Implemented, verified and inspectable. |
-
-`published` requires a real artifact. Static sample output must never be shown
-as a live model or agent result.
+Each module has exactly four stages. A stage has at least three key points, at
+most one highlighted (`key`) point, one decision and three evidence captures.
 
 ## Files
 
 | File | Contains |
 | --- | --- |
-| `site.ts` | Identity, tagline, focus list, honesty notice, section order |
-| `expertise.ts` | The four core expertise areas |
-| `modules.ts` | Learning modules with theory / build / evidence stages |
-| `playground.ts` | Planned playground experiences and the credential notice |
-| `playbook.ts` | Discover, Prove, Operationalize, Scale |
-| `about.ts` | How the lab grows, standards, learning journey, engineering |
-| `types.ts` | Shared types and the status roll-up helper |
+| `types.ts` | `L` (localized text), module, stage and visual types |
+| `module1.ts` .. `module4.ts` | The four modules and their sixteen stages |
+| `site.ts` | Identity, cover, overview, playbook goals, and the closing and notes copy |
+| `iconNames.ts` | Registered icon names; `icons.tsx` maps them to Fluent icons |
+| `imageSizes.json` | Pixel size per capture, used to reserve layout space |
+| `index.ts` | Aggregates content and derives the slide list and ids |
+
+UI strings (buttons, labels, aria text) live in `src/i18n/ui.ts`.
 
 ## Enforced invariants
 
-`src/content/content.test.ts` and `src/app/App.test.tsx` fail the build when:
+`src/content/journey/content.test.ts` and `src/app/App.test.tsx` fail the build
+when:
 
-- Private exam context appears in public copy (attempt scores, pass score,
-  countdown wording, the exam code).
-- A status outside the allowed set is used.
-- A module claims published evidence while its build or theory is not published.
-- Any playground experience claims `published` before a live result exists.
-- The section order or the four expertise areas and four playbook stages change
-  without the tests being updated deliberately.
-- The playground notice stops stating that no credential reaches the browser.
+- Any text lacks an English or Korean value, or contains a question mark.
+- Private planning context appears (attempt scores, countdowns, exam framing).
+- A secret pattern appears: real resource names or hosts, GUIDs, key fragments.
+- A slide id is duplicated, or a stage breaks the structure above.
+- A referenced icon is not registered, or an image file is missing.
+- The deck stops opening on the cover, switching language, navigating by
+  button, keyboard and hash, or opening the capture lightbox.
 
-## Adding a module
+## Adding or changing content
 
-1. Add an entry to `learningModules` with `theory`, `build` and `evidence`
-   stages, all starting at `planned`.
-2. Create the matching lab under `labs/` from `labs/_template`.
-3. Move each stage forward only when the work behind it actually exists.
-4. When the result is real, link it from the module and move the playground
-   experience that exposes it to `published`.
+1. Edit the stage in the matching `moduleN.ts`; give every text both `en` and
+   `ko`. Keep technical terms in English in the Korean text.
+2. Add a masked capture to `public/img/foundry`, a WebP copy to `thumb/`, and
+   its size to `imageSizes.json`. Never place a real key, endpoint or tenant id
+   in a text or image.
+3. Run `npm run lint`, `npm test` and `npm run build:dev`.
 
 ## Tone
 
-Plain, specific, and quiet. No marketing superlatives, no score dashboards, no
-badge walls, no gradients or animation for decoration. The evidence is the
-argument.
+Proposal style: short, specific and declarative. State what Microsoft Foundry
+enables and how it is built. Highlight a point with colour only when it is a
+real decision or constraint. Region, billing-tier and preview constraints are
+listed as limitations instead of being worked around in the content.

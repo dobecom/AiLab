@@ -1,0 +1,50 @@
+import { l } from '../content/journey/types'
+
+/** Interface strings. Technical terms stay in English in the Korean text. */
+export const ui = {
+  documentTitle: {
+    en: 'AiLab | AI Apps and Agents on Microsoft Foundry',
+    ko: 'AiLab | Microsoft Foundry 기반 AI Apps and Agents',
+  },
+  skip: l('Skip to the journey', '본문으로 건너뛰기'),
+  brandRole: l('AI Apps and Agents Developer', 'AI Apps and Agents Developer'),
+  navLabel: l('Journey navigation', '여정 내비게이션'),
+  navOverview: l('Overview', '개요'),
+  navClosing: l('Playbook', 'Playbook'),
+  homeLabel: l('Back to the start', '처음으로'),
+  langButton: {
+    en: { label: 'Switch language to Korean', short: 'EN', name: '한국어' },
+    ko: { label: '언어를 English로 전환', short: '한', name: 'English' },
+  },
+  prev: l('Previous', '이전'),
+  next: l('Next', '다음'),
+  slideOf: (index: number, total: number) =>
+    l(`Slide ${index} of ${total}`, `${total}개 중 ${index}번째 슬라이드`),
+  stageOf: (index: number) => l(`Stage ${index} of 4`, `Stage ${index} / 4`),
+  stageWord: l('Stage', 'Stage'),
+  moduleWord: l('Module', 'Module'),
+  deliverable: l('Deliverable', '제공 결과'),
+  keyPoints: l('Key points', '핵심 포인트'),
+  decision: l('Recommended design', '권장 설계'),
+  visualTabs: l('Stage visuals', 'Stage 시각 자료'),
+  evidence: l('Recorded evidence', '기록된 실행 화면'),
+  evidenceHint: l(
+    'Captured from Foundry portal and SDK sessions. Select to enlarge.',
+    'Foundry portal과 SDK 실행에서 캡처했습니다. 선택하면 확대됩니다.',
+  ),
+  limitation: l('Limitations', '제한 사항'),
+  openEvidence: l('Open capture', '캡처 열기'),
+  closeLightbox: l('Close', '닫기'),
+  prevCapture: l('Previous capture', '이전 캡처'),
+  nextCapture: l('Next capture', '다음 캡처'),
+  captureOf: (index: number, total: number) => l(`Capture ${index} of ${total}`, `캡처 ${index} / ${total}`),
+  outcomes: l('What you get', '기대 결과'),
+  capabilities: l('Capabilities', '핵심 역량'),
+  deliveryPath: l('Delivery path', '구현 경로'),
+  openStage: l('Open stage', 'Stage 열기'),
+  openModule: l('Open module', 'Module 열기'),
+  jumpHint: l('Select any stage to jump to it.', 'Stage를 선택하면 해당 위치로 이동합니다.'),
+  modules: l('Modules', 'Modules'),
+  stages: l('Stages', 'Stages'),
+  captures: l('Recorded captures', '기록된 캡처'),
+} as const
